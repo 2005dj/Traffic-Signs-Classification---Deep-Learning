@@ -1,36 +1,33 @@
-# Image Classification of Road Signs
+Image Classification of Road Signs
 
-A simple project that trains a computer to look at a photo and tell whether it contains a **stop sign** or **not**.
+A binary image classifier that detects whether a road scene contains a stop sign, built with transfer learning on a pretrained ResNet-18. The project covers the full pipeline: data ingestion, preprocessing, training with checkpointing, evaluation, and inference on new images.
 
-## What it does
+Overview
 
-The notebook takes a set of labeled road images, learns from them, and then can look at a brand-new photo and predict: *stop sign* or *no stop sign*.
+Training a convolutional network from scratch requires a large labeled dataset and significant compute. This project instead uses ResNet-18 pretrained on ImageNet as a fixed feature extractor: all convolutional layers are frozen, and only the final fully connected layer is replaced and trained on the stop-sign task. This reaches strong validation accuracy with a small dataset and only a few minutes of training.
 
-Instead of teaching the model everything from zero, it starts from a model that already knows how to recognize shapes and objects (called **transfer learning**) and just teaches it the one new task. This means it learns fast and needs only a small number of images.
+Approach
 
-## How it works
 
-1. **Get the data** — the notebook automatically downloads the image set.
-2. **Prepare the images** — resizes them to a standard size and splits them into a group for learning and a group for testing.
-3. **Train the model** — the model studies the training images.
-4. **Check the results** — it measures how often it gets the test images right.
-5. **Try it out** — you can feed in your own image and see what it predicts.
+Model: ResNet-18 pretrained on ImageNet, with all feature layers frozen and the final layer replaced to output 2 classes (stop, not_stop).
+Preprocessing: images resized to 224×224 and normalized using standard ImageNet statistics, matching the pretrained model's original training.
+Data split: stratified 90/10 train/validation split, organized into class folders and loaded with ImageFolder.
+Training: SGD with momentum, cross-entropy loss, and a cyclical learning rate scheduler over 10 epochs. The weights from the best-performing epoch are checkpointed and restored at the end, rather than simply using the final epoch.
 
-## How to run
 
-1. Install the requirements:
-   ```
-   pip install -r requirements.txt
-   ```
-2. Open `Image_Classification_of_Road_Signs.ipynb` and run the cells from top to bottom.
+Pipeline
 
-The dataset downloads on its own, so there's nothing to set up manually. Training takes only a few minutes.
 
-## Notes
+Data — the dataset downloads and extracts automatically from a hosted archive.
+Preprocessing — images are resized, normalized, and split into training and validation sets.
+Model setup — load pretrained ResNet-18, freeze feature layers, swap the classifier head.
+Training — train the classifier while tracking loss and validation accuracy per epoch.
+Evaluation — plot the training loss and validation accuracy curves.
+Inference — load the saved model and classify a new image.
 
-- The trained model is saved as `model.pt` when you run the notebook, so it doesn't need to be included here — it's recreated each time.
-- The downloaded images and result folders are also generated when you run it.
+generated at runtime and are intentionally excluded from the repository — they're reproduced on each run.
 
-## Built with
 
-Python, PyTorch, and a few common image and math libraries.
+Stack
+
+Python, PyTorch, torchvision, PIL, NumPy, Matplotlib.
