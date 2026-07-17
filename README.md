@@ -22,18 +22,6 @@ Training a convolutional network from scratch requires a large labeled dataset a
 5. **Evaluation** — plot the training loss and validation accuracy curves.
 6. **Inference** — load the saved model and classify a new image.
 
-## Running it
-
-Install dependencies:
-```
-pip install -r requirements.txt
-```
-Then open `Image_Classification_of_Road_Signs.ipynb` and run the cells top to bottom. The dataset is fetched automatically, so no manual setup is required. Training completes in a few minutes on CPU.
-
-## Notes
-
-- The trained weights (`model.pt`), downloaded images, and split folders are generated at runtime and are intentionally excluded from the repository — they're reproduced on each run.
-
 ## Stack
 
 Python, PyTorch, torchvision, PIL, NumPy, Matplotlib.
